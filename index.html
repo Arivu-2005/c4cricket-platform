@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C4CRICKET – Every Ball. Every Score. Every Story.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="c4-theme">
+
+  <!-- TOP HEADER / NAV BAR -->
+  <header class="c4-header">
+    <div class="c4-container header-inner">
+      <div class="header-left">
+        <a href="#home" class="brand-logo" onclick="c4App.navigate('home')">
+          <img src="/images/c4cricket-logo.png" alt="C4CRICKET Logo" class="w-[180px] h-auto object-contain nav-brand-img">
+        </a>
+
+        <!-- City Selector -->
+        <div class="header-city-select-wrap">
+          <i class="fa-solid fa-location-dot city-icon"></i>
+          <select id="globalCitySelector" class="header-city-select" onchange="c4App.handleCityChange(this.value)">
+            <option value="All Cities">All Cities</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi NCR">Delhi NCR</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+            <option value="Pune">Pune</option>
+          </select>
+        </div>
+
+        <!-- Global Search -->
+        <div class="header-search-wrap">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="globalSearchInput" placeholder="Search turfs, academies, clubs, shops, tournaments..." onkeyup="if(event.key==='Enter') c4App.handleGlobalSearch()">
+          <button class="search-btn-icon" onclick="c4App.handleGlobalSearch()"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="telemetry-badge">
+          <span class="pulse-indicator"></span>
+          <span>BROADCAST ENGINE ACTIVE</span>
+        </div>
+        <a href="admin.html" class="c4-btn c4-btn-outline-sm" title="Open Admin Portal">
+          <i class="fa-solid fa-shield-halved"></i> Admin Login
+        </a>
+        <button class="c4-btn c4-btn-success-sm" onclick="c4App.openBusinessRegModal()">
+          <i class="fa-solid fa-building-circle-check"></i> Register Business
+        </button>
+        <button class="c4-avatar-btn" id="userAccountBtn" onclick="c4App.openAuthOrUserModal()" title="Account / Profile">
+          <i class="fa-solid fa-user"></i>
+        </button>
+        <!-- Mobile Hamburger Toggle -->
+        <button class="c4-mobile-toggle-btn" onclick="c4App.toggleMobileMenu()" title="Toggle Navigation Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Slideout Navigation Menu -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+      <div class="mobile-drawer-header">
+        <div class="logo-mark">
+          <span class="logo-c4">C4</span>
+          <div class="cricket-ball-icon"></div>
+          <span class="logo-text">CRICKET</span>
+        </div>
+        <button class="drawer-close-btn" onclick="c4App.toggleMobileMenu()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="mobile-drawer-links">
+        <a href="#home" onclick="c4App.navigate('home'); c4App.toggleMobileMenu();"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="#news" onclick="c4App.navigate('news'); c4App.toggleMobileMenu();"><i class="fa-solid fa-newspaper"></i> Cricket News</a>
+        <a href="#live-scores" onclick="c4App.navigate('live-scores'); c4App.toggleMobileMenu();"><i class="fa-solid fa-tower-broadcast"></i> Live Scores</a>
+        <a href="#academies" onclick="c4App.navigate('academies'); c4App.toggleMobileMenu();"><i class="fa-solid fa-graduation-cap"></i> Academies</a>
+        <a href="#turfs" onclick="c4App.navigate('turfs'); c4App.toggleMobileMenu();"><i class="fa-solid fa-table-tennis-paddle-ball"></i> Turfs & Grounds</a>
+        <a href="#shops" onclick="c4App.navigate('shops'); c4App.toggleMobileMenu();"><i class="fa-solid fa-store"></i> Sports Shops</a>
+        <a href="#tournaments" onclick="c4App.navigate('tournaments'); c4App.toggleMobileMenu();"><i class="fa-solid fa-trophy"></i> Tournaments</a>
+        <a href="#pricing" onclick="c4App.navigate('pricing'); c4App.toggleMobileMenu();"><i class="fa-solid fa-indian-rupee-sign"></i> Pricing & Plans</a>
+        <a href="admin.html"><i class="fa-solid fa-shield-halved"></i> Admin Portal</a>
+      </div>
+    </div>
+
+    <!-- MINI LIVE TICKER -->
+    <div class="live-ticker-bar">
+      <div class="c4-container ticker-inner">
+        <div class="ticker-nav-links">
+          <a href="#live-scores" onclick="c4App.navigate('live-scores')">Live Scores</a>
+          <a href="#news" onclick="c4App.navigate('news')">Cricket News</a>
+          <a href="#academies" onclick="c4App.navigate('academies')">Academies & Turfs</a>
+          <a href="#shops" onclick="c4App.navigate('shops')">Sports Shops</a>
+          <a href="#tournaments" onclick="c4App.navigate('tournaments')">Tournaments</a>
+          <a href="#pricing" onclick="c4App.navigate('pricing')">Pricing & Plans</a>
+          <a href="admin.html">Admin Portal</a>
+        </div>
+        <div class="ticker-scores-stream" id="tickerScoresStream">
+          <div class="ticker-item"><span class="badge-red">LIVE</span> IND vs ENG: 246/4 (41.2 ov)</div>
+          <div class="ticker-item divider">|</div>
+          <div class="ticker-item"><span class="badge-blue">T20</span> SYD vs MEL: 171/6 (20.0 ov)</div>
+          <div class="ticker-item divider">|</div>
+          <div class="ticker-item"><span class="badge-green">RESULT</span> CSK beat MI by 4 wkts</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main id="mainAppContent">
+    
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="c4-hero-section" id="heroSection">
+      <div class="hero-stadium-bg"></div>
+      <div class="hero-floodlight-left"></div>
+      <div class="hero-floodlight-right"></div>
+      
+      <div class="c4-container hero-inner-3col">
+        <!-- LEFT COLUMN: Official 3D C4CRICKET Logo Emblem -->
+        <div class="hero-col-left">
+          <div class="hero-emblem-wrap">
+            <img src="/images/c4cricket-logo.png" alt="C4CRICKET Official Emblem" class="hero-official-logo-img">
+          </div>
+        </div>
+
+        <!-- CENTER COLUMN: Headlines & CTAs -->
+        <div class="hero-col-center">
+          <div class="hero-pill-badge">
+            <span>CRICKET BRINGS US TOGETHER</span>
+          </div>
+
+          <h1 class="hero-headline">
+            A NEW ERA OF CRICKET<br>
+            <span class="highlight-yellow">AT YOUR FINGERTIPS</span>
+          </h1>
+
+          <p class="hero-description">
+            India's unified digital stadium connecting grassroots players, certified academies, high-spec turfs, sports gear stockists, and live tournament telemetrics.
+          </p>
+
+          <div class="hero-cta-group">
+            <button class="c4-btn c4-btn-primary" onclick="c4App.scrollToSection('exploreSection')">
+              EXPLORE C4CRICKET <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button class="c4-btn c4-btn-green" onclick="c4App.openBusinessRegModal()">
+              <i class="fa-solid fa-rectangle-list"></i> LIST YOUR BUSINESS
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Removed as requested -->
+      </div>
+
+      <!-- YELLOW CATEGORY STRIP (Directly under hero banner) -->
+      <nav class="c4-yellow-nav-strip">
+        <div class="c4-container yellow-nav-inner">
+          <a href="#home" class="y-nav-item active" onclick="c4App.navigate('home')"><i class="fa-solid fa-house"></i></a>
+          <span class="y-dot">•</span>
+          <a href="#news" class="y-nav-item" onclick="c4App.navigate('news')">NEWS</a>
+          <span class="y-dot">•</span>
+          <a href="#live-scores" class="y-nav-item" onclick="c4App.navigate('live-scores')">LIVE SCORES</a>
+          <span class="y-dot">•</span>
+          <a href="#academies" class="y-nav-item" onclick="c4App.navigate('academies')">ACADEMIES</a>
+          <span class="y-dot">•</span>
+          <a href="#turfs" class="y-nav-item" onclick="c4App.navigate('turfs')">TURFS</a>
+          <span class="y-dot">•</span>
+          <a href="#shops" class="y-nav-item" onclick="c4App.navigate('shops')">SPORTS SHOPS</a>
+          <span class="y-dot">•</span>
+          <a href="#tournaments" class="y-nav-item" onclick="c4App.navigate('tournaments')">TOURNAMENTS</a>
+          <span class="y-dot">•</span>
+          <a href="#pricing" class="y-nav-item" onclick="c4App.navigate('pricing')">AND MORE ...</a>
+        </div>
+      </nav>
+    </section>
+
+    <!-- ==================== PLATFORM PREVIEW & LIVE CENTRE ==================== -->
+    <section class="section-live-centre" id="liveCentreSection">
+      <div class="c4-container">
+        <div class="live-hub-badge-header">
+          <div class="badge-left">
+            <span class="pill-dark-telemetry">LIVE HUB TELEMETRY</span>
+            <div class="live-heading-row">
+              <h2>Platform Preview & Live Centre</h2>
+              <span class="sub-lead">Simultaneous data transmission and mobile live stream score tracker.</span>
+            </div>
+          </div>
+          <button class="c4-btn-glass-green" onclick="c4App.navigate('match-center')">
+            <i class="fa-solid fa-expand"></i> Open Full Scorecard
+          </button>
+        </div>
+
+        <!-- TWO COLUMN PREVIEW (Desktop Mockup + Mobile Frame Mockup) -->
+        <div class="live-preview-grid">
+          <!-- Left: Broadcast Desktop Card -->
+          <div class="browser-telemetry-card">
+            <div class="browser-top-bar">
+              <div class="dots-wrap">
+                <span class="dot d-red"></span>
+                <span class="dot d-yellow"></span>
+                <span class="dot d-green"></span>
+              </div>
+              <div class="browser-url-pill">
+                <i class="fa-solid fa-lock"></i> c4cricket.com/live-centre
+              </div>
+              <div class="browser-status-pills">
+                <span class="badge-demo-tag">DEMO DATA</span>
+                <span class="badge-broadcast-active"><span class="pulse-indicator-sm"></span> BROADCAST ACTIVE</span>
+              </div>
+            </div>
+
+            <div class="browser-body" id="heroLiveMatchCard">
+              <div class="match-hero-grid">
+                <div class="match-hero-left">
+                  <span class="series-tag">ICC ODI SERIES – LIVE</span>
+                  <h3 class="hero-match-headline" id="heroHeadlineText">India Clinch Another Thrilling Victory!</h3>
+                  <p class="hero-match-desc">Latest match updates, boundary breakdown, player telemetry ratings and pitch wear telemetry.</p>
+                  <div class="hero-match-actions">
+                    <button class="c4-btn c4-btn-yellow-sm" onclick="c4App.openScorecardModal('match-1')">View Scorecard</button>
+                    <button class="c4-btn c4-btn-dark-sm" onclick="c4App.openBallByBallModal('match-1')">Ball-by-Ball</button>
+                  </div>
+                </div>
+
+                <div class="match-hero-center-visual">
+                  <img src="/images/hero_celebration.png" alt="India Match Victory Celebration" onerror="this.src='hero_celebration.png'">
+                </div>
+
+                <div class="match-hero-right">
+                  <div class="live-status-pill"><span class="pulse-red"></span> LIVE</div>
+                  <div class="match-versus-headline">India vs Australia</div>
+                  <div class="match-sub-info" style="font-size: 0.72rem; color: var(--c4-text-muted); margin-bottom: 8px;">ICC ODI Series • Match 2</div>
+                  <div class="team-score-row">
+                    <div class="team-label"><span class="flag-icon flag-in">🇮🇳</span> IND</div>
+                    <div class="score-bold">245/3 <span class="overs-light">(38.2)</span></div>
+                  </div>
+                  <div class="team-score-row">
+                    <div class="team-label"><span class="flag-icon flag-au">🇦🇺</span> AUS</div>
+                    <div class="score-muted">244 <span class="overs-light">(49.4)</span></div>
+                  </div>
+                  <div class="equation-status">India need 245 runs to win</div>
+                </div>
+              </div>
+
+              <!-- 4 Micro News Thumbnails below the match card inside desktop preview -->
+              <div class="browser-news-tiles">
+                <div class="tile-col" onclick="c4App.openNewsDetail('news-1')">
+                  <div class="tile-header">Latest News</div>
+                  <div class="tile-img-wrap">
+                    <img src="/images/tile_stadium_hd.png" alt="Latest News Stadium" onerror="this.src='/images/news_stadium.jpg'">
+                    <div class="tile-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                  </div>
+                </div>
+                <div class="tile-col" onclick="c4App.openNewsDetail('news-2')">
+                  <div class="tile-header">Match Analysis</div>
+                  <div class="tile-img-wrap">
+                    <img src="/images/tile_ball_hd.png" alt="Match Analysis Cricket Ball" onerror="this.src='/images/match_ball.jpg'">
+                    <div class="tile-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                  </div>
+                </div>
+                <div class="tile-col" onclick="c4App.openNewsDetail('news-3')">
+                  <div class="tile-header">Player Updates</div>
+                  <div class="tile-img-wrap">
+                    <img src="/images/tile_batsman_hd.png" alt="Player Updates Batsman" onerror="this.src='/images/player_batsman.jpg'">
+                    <div class="tile-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                  </div>
+                </div>
+                <div class="tile-col" onclick="c4App.openNewsDetail('news-4')">
+                  <div class="tile-header">IPL Updates</div>
+                  <div class="tile-img-wrap">
+                    <img src="/images/tile_ipl_trophy_hd.png" alt="IPL Updates Trophy" onerror="this.src='/images/ipl_match.jpg'">
+                    <div class="tile-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Mobile Score Tracker Mockup Frame -->
+          <div class="mobile-device-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-content">
+              <div class="mobile-screen-header">
+                <span class="m-brand"><span class="m-c4">C4</span>CRICKET</span>
+                <i class="fa-solid fa-bars m-menu"></i>
+              </div>
+              <div class="mobile-live-box">
+                <div class="m-live-tag"><span class="pulse-red"></span> LIVE SCORE <span class="m-match-no">Match 2</span></div>
+                <div class="m-score-row">
+                  <div class="m-team">🇮🇳 IND</div>
+                  <div class="m-runs">245/3 <span class="m-ov">(38.2)</span></div>
+                </div>
+                <div class="m-score-row">
+                  <div class="m-team">🇦🇺 AUS</div>
+                  <div class="m-runs muted">244 <span class="m-ov">(49.4)</span></div>
+                </div>
+                <div class="m-eq">India need 245 runs to win</div>
+              </div>
+
+              <div class="mobile-news-section">
+                <div class="m-news-title">LATEST NEWS</div>
+                <div class="m-news-card" onclick="c4App.openNewsDetail('news-1')">
+                  <img src="/images/news_stadium.jpg" alt="news" onerror="this.src='news_stadium.jpg'">
+                  <div class="m-card-info">
+                    <h5>India Win Another Thrilling Match</h5>
+                    <span>12 mins ago • Match Analysis</span>
+                  </div>
+                </div>
+                <div class="m-news-card" onclick="c4App.openNewsDetail('news-2')">
+                  <img src="/images/match_ball.jpg" alt="news" onerror="this.src='match_ball.jpg'">
+                  <div class="m-card-info">
+                    <h5>Rohit Sharma's Masterclass</h5>
+                    <span>45 mins ago • Player Updates</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EXPLORE EVERYTHING ABOUT CRICKET ==================== -->
+    <section class="section-explore-cards" id="exploreSection">
+      <div class="c4-container">
+        <div class="section-header-banner">
+          <div class="banner-title-pill">EXPLORE EVERYTHING ABOUT CRICKET</div>
+          <div class="banner-sub-meta">Verified • Certified • Real-time</div>
+        </div>
+
+        <div class="quad-cards-grid">
+          <!-- Card 1: Cricket Academies -->
+          <div class="quad-card">
+            <div class="quad-img-wrap">
+              <img src="/images/card_academies_hd.png" alt="Cricket Academies" onerror="this.src='/images/player_batsman.jpg'">
+              <div class="quad-floating-badge bg-gold">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+            </div>
+            <div class="quad-body">
+              <h3 class="quad-title">Cricket Academies</h3>
+              <p class="quad-desc">Find and connect with certified cricket academies in your city. Train, learn and grow under BCCI coaches.</p>
+              <button class="c4-btn c4-btn-yellow-outline" onclick="c4App.navigate('academies')">
+                Explore Academies <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Turfs & Grounds -->
+          <div class="quad-card">
+            <div class="quad-img-wrap">
+              <img src="/images/card_turfs_hd.png" alt="Turfs & Grounds" onerror="this.src='/images/card_turfs_real.jpg'">
+              <div class="quad-floating-badge bg-teal">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </div>
+            </div>
+            <div class="quad-body">
+              <h3 class="quad-title">Turfs & Grounds</h3>
+              <p class="quad-desc">Book cricket turfs, football, badminton and tennis grounds with night floodlights in your area.</p>
+              <button class="c4-btn c4-btn-teal" onclick="c4App.navigate('turfs')">
+                Book Turfs <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Sports Shops -->
+          <div class="quad-card">
+            <div class="quad-img-wrap">
+              <img src="/images/card_shops_hd.png" alt="Sports Shops" onerror="this.src='/images/match_ball.jpg'">
+              <div class="quad-floating-badge bg-amber">
+                <i class="fa-solid fa-store"></i>
+              </div>
+            </div>
+            <div class="quad-body">
+              <h3 class="quad-title">Sports Shops</h3>
+              <p class="quad-desc">Find grade-1 English willow, team kits, helmets, pads and genuine cricket gear shops near you.</p>
+              <button class="c4-btn c4-btn-yellow-outline" onclick="c4App.navigate('shops')">
+                Find Sports Shops <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 4: Tournaments & Events -->
+          <div class="quad-card">
+            <div class="quad-img-wrap">
+              <img src="/images/card_tournaments_hd.png" alt="Tournaments & Events" onerror="this.src='/images/news_stadium.jpg'">
+              <div class="quad-floating-badge bg-gold-cup">
+                <i class="fa-solid fa-trophy"></i>
+              </div>
+            </div>
+            <div class="quad-body">
+              <h3 class="quad-title">Tournaments & Events</h3>
+              <p class="quad-desc">Stay updated with local tournaments, corporate leagues, tape ball cups and register your team.</p>
+              <button class="c4-btn c4-btn-teal" onclick="c4App.navigate('tournaments')">
+                View Tournaments <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== QUICK ACCESS FOR PLAYERS & FANS ==================== -->
+    <section class="section-quick-access">
+      <div class="c4-container">
+        <div class="section-header-banner">
+          <div class="banner-title-pill">QUICK ACCESS FOR PLAYERS & FANS</div>
+          <div class="banner-sub-meta">Select a direct module</div>
+        </div>
+
+        <div class="quick-icons-grid">
+          <div class="quick-access-box" onclick="c4App.scrollToFilter('location')">
+            <div class="icon-circle bg-circle-teal"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="quick-name">Search by Location</div>
+          </div>
+          <div class="quick-access-box" onclick="c4App.navigate('match-center')">
+            <div class="icon-circle bg-circle-green"><i class="fa-solid fa-calendar-days"></i></div>
+            <div class="quick-name">Upcoming Matches</div>
+          </div>
+          <div class="quick-access-box" onclick="c4App.navigate('academies')">
+            <div class="icon-circle bg-circle-emerald"><i class="fa-solid fa-users"></i></div>
+            <div class="quick-name">Academies & Turfs</div>
+          </div>
+          <div class="quick-access-box" onclick="c4App.openPlayerCommunityModal()">
+            <div class="icon-circle bg-circle-mint"><i class="fa-solid fa-user-group"></i></div>
+            <div class="quick-name">Players & Teams</div>
+          </div>
+          <div class="quick-access-box" onclick="c4App.navigate('tournaments')">
+            <div class="icon-circle bg-circle-darkgreen"><i class="fa-solid fa-trophy"></i></div>
+            <div class="quick-name">Tournaments & Events</div>
+          </div>
+          <div class="quick-access-box" onclick="c4App.navigate('news')">
+            <div class="icon-circle bg-circle-forest"><i class="fa-solid fa-newspaper"></i></div>
+            <div class="quick-name">Latest Cricket News</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== BUSINESS LISTINGS FOR OWNERS ==================== -->
+    <section class="section-business-owners">
+      <div class="c4-container">
+        <div class="section-header-banner yellow-banner">
+          <div class="banner-title-pill text-black">
+            <i class="fa-solid fa-building"></i> BUSINESS LISTINGS FOR OWNERS
+          </div>
+          <div class="banner-sub-meta text-black">Register in under 2 minutes</div>
+        </div>
+
+        <div class="owner-cards-grid">
+          <!-- Item 1: Academy -->
+          <div class="owner-box">
+            <div class="owner-icon-square bg-mint-tint"><i class="fa-solid fa-landmark"></i></div>
+            <div class="owner-box-content">
+              <h4>List Your Academy</h4>
+              <p>Showcase coaching batches, turf nets, BCCI coaches and get student leads.</p>
+              <button class="c4-btn c4-btn-teal-xs" onclick="c4App.openBusinessRegModal('academy')">Register Academy</button>
+            </div>
+          </div>
+
+          <!-- Item 2: Turf -->
+          <div class="owner-box">
+            <div class="owner-icon-square bg-amber-tint"><i class="fa-solid fa-table-tennis-paddle-ball"></i></div>
+            <div class="owner-box-content">
+              <h4>List Your Turf / Ground</h4>
+              <p>Accept online slot reservations for box cricket, astro turfs and floodlit arenas.</p>
+              <button class="c4-btn c4-btn-yellow-xs" onclick="c4App.openBusinessRegModal('turf')">Register Turf</button>
+            </div>
+          </div>
+
+          <!-- Item 3: Shop -->
+          <div class="owner-box">
+            <div class="owner-icon-square bg-coral-tint"><i class="fa-solid fa-store"></i></div>
+            <div class="owner-box-content">
+              <h4>List Your Sports Shop</h4>
+              <p>Feature your English willow stock, discount vouchers and repair services.</p>
+              <button class="c4-btn c4-btn-teal-xs" onclick="c4App.openBusinessRegModal('shop')">Register Shop</button>
+            </div>
+          </div>
+
+          <!-- Item 4: Tournament -->
+          <div class="owner-box">
+            <div class="owner-icon-square bg-gold-tint"><i class="fa-solid fa-bullhorn"></i></div>
+            <div class="owner-box-content">
+              <h4>Reach More Players</h4>
+              <p>Promote your upcoming cricket cup, tournaments and corporate matches.</p>
+              <button class="c4-btn c4-btn-yellow-xs" onclick="c4App.openBusinessRegModal('tournament')">List Tournament</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PRICING & VALUE PROPOSITION SPLIT ==================== -->
+    <section class="section-pricing-value" id="pricing">
+      <div class="c4-container">
+        <div class="split-pricing-grid">
+          
+          <!-- Left Column: Explore Everything Plans -->
+          <div class="pricing-card-col">
+            <div class="card-header-bar bar-green">
+              <div class="header-tag-title"><i class="fa-solid fa-indian-rupee-sign"></i> EXPLORE EVERYTHING PLANS (INCOME POTENTIAL)</div>
+            </div>
+            <div class="plan-rows-list">
+              <div class="plan-row-item">
+                <div class="plan-name-badge"><i class="fa-solid fa-graduation-cap"></i> Academy Listing</div>
+                <div class="plan-price">₹499 – ₹999 / month</div>
+              </div>
+              <div class="plan-row-item">
+                <div class="plan-name-badge"><i class="fa-solid fa-futbol"></i> Turf / Ground Listing</div>
+                <div class="plan-price">₹999 – ₹1,999 / month</div>
+              </div>
+              <div class="plan-row-item">
+                <div class="plan-name-badge"><i class="fa-solid fa-bag-shopping"></i> Sports Shop Listing</div>
+                <div class="plan-price">₹499 – ₹1,499 / month</div>
+              </div>
+              <div class="plan-row-item">
+                <div class="plan-name-badge"><i class="fa-solid fa-fire"></i> Feature in Homepage</div>
+                <div class="plan-price">₹2,000 – ₹10,000 / campaign</div>
+              </div>
+              <div class="plan-row-item">
+                <div class="plan-name-badge"><i class="fa-solid fa-trophy"></i> Tournament & Event Listing</div>
+                <div class="plan-price">₹1,000 – ₹5,000 / event</div>
+              </div>
+              <div class="plan-row-item">
+                <div class="plan-name-badge"><i class="fa-solid fa-rectangle-ad"></i> Advertisement & Branding</div>
+                <div class="plan-price">Custom Packages Available</div>
+              </div>
+            </div>
+            <button class="c4-btn c4-btn-green-full" onclick="c4App.openPricingDetailsModal()">
+              View Detailed Monetization Plans <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Right Column: Why List Your Business -->
+          <div class="pricing-card-col">
+            <div class="card-header-bar bar-crimson">
+              <div class="header-tag-title"><i class="fa-solid fa-circle-question"></i> WHY LIST YOUR BUSINESS ON C4CRICKET?</div>
+            </div>
+            <div class="value-bullets-list">
+              <div class="value-bullet-item">
+                <div class="bullet-icon bg-red-dot"><i class="fa-solid fa-chart-line"></i></div>
+                <div class="bullet-content">
+                  <h5>Get more visibility among cricket lovers</h5>
+                  <p>Targeted reach to active cricketers, coaches and sports parents daily.</p>
+                </div>
+              </div>
+              <div class="value-bullet-item">
+                <div class="bullet-icon bg-orange-dot"><i class="fa-solid fa-bullseye"></i></div>
+                <div class="bullet-content">
+                  <h5>Reach local players, teams and communities</h5>
+                  <p>Location-based discovery across Pan-India zones.</p>
+                </div>
+              </div>
+              <div class="value-bullet-item">
+                <div class="bullet-icon bg-green-dot"><i class="fa-solid fa-users-viewfinder"></i></div>
+                <div class="bullet-content">
+                  <h5>Grow your business with targeted audience</h5>
+                  <p>Direct inquiries, bookings and zero platform commissions.</p>
+                </div>
+              </div>
+              <div class="value-bullet-item">
+                <div class="bullet-icon bg-blue-dot"><i class="fa-solid fa-bullhorn"></i></div>
+                <div class="bullet-content">
+                  <h5>Promote your events, offers and new products</h5>
+                  <p>Spotlight placements on homepage and category pages.</p>
+                </div>
+              </div>
+              <div class="value-bullet-item">
+                <div class="bullet-icon bg-purple-dot"><i class="fa-solid fa-shield-heart"></i></div>
+                <div class="bullet-content">
+                  <h5>Be part of a trusted cricket platform</h5>
+                  <p>Verified merchant badges for all certified venues and equipment stockists.</p>
+                </div>
+              </div>
+            </div>
+            <button class="c4-btn c4-btn-yellow-full" onclick="c4App.openBusinessRegModal()">
+              Join As A Merchant Partner <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PAN-INDIA COMMUNITY BANNER ==================== -->
+    <section class="section-community-banner">
+      <div class="community-banner-overlay"></div>
+      <div class="c4-container banner-content-wrap">
+        <span class="community-top-tag">PAN-INDIA COMMUNITY</span>
+        <h2>LET'S BUILD A STRONGER<br>CRICKET COMMUNITY TOGETHER!</h2>
+        <p class="community-subtext">Uniting every cricketer, every neighbourhood turf, every bat craftsman, and every young prodigy under one premier broadcast ecosystem.</p>
+        <div class="banner-buttons-row">
+          <button class="c4-btn c4-btn-yellow" onclick="c4App.openBusinessRegModal()">
+            REGISTER YOUR VENUE / SHOP NOW
+          </button>
+          <button class="c4-btn c4-btn-outline-gold" onclick="c4App.navigate('match-center')">
+            EXPLORE MATCH CENTRE
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== LIVE MATCH CENTRE (TELEMETRY SCOREBOARD) ==================== -->
+    <section class="section-bottom-match-centre" id="matchCentreSection">
+      <div class="c4-container">
+        <div class="match-centre-topbar">
+          <div class="mc-left-head">
+            <h3>Live Match Centre</h3>
+            <span>Real-time ball tracking, Hawkeye pitch analytics, and broadcast stream data.</span>
+          </div>
+          <div class="mc-tabs-wrap">
+            <div class="mc-filter-tabs">
+              <button class="mc-tab-btn active" onclick="c4App.filterLiveMatches('live')">Live (2)</button>
+              <button class="mc-tab-btn" onclick="c4App.filterLiveMatches('upcoming')">Upcoming (4)</button>
+              <button class="mc-tab-btn" onclick="c4App.filterLiveMatches('completed')">Completed (6)</button>
+            </div>
+            <button class="c4-btn c4-btn-teal-sm" onclick="c4App.openAllMatchesModal()">
+              View All Matches <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Telemetry Match Scorecard Table Area -->
+        <div class="live-telemetry-dashboard">
+          <div class="telemetry-match-header">
+            <div class="match-name-tag">
+              <span class="badge-demo-tag">DEMO DATA</span>
+              <div class="t-match-title">
+                <strong>Mumbai Indians vs Chennai Super Kings</strong>
+                <span class="t-subvenue">IPL 2026 Grand Finale • Wankhede Stadium</span>
+              </div>
+            </div>
+            <div class="run-rate-counters">
+              <div class="rr-box">
+                <span class="rr-lbl">CURRENT RR</span>
+                <span class="rr-val text-yellow">9.71</span>
+              </div>
+              <div class="rr-box">
+                <span class="rr-lbl">REQUIRED RR</span>
+                <span class="rr-val text-green">1.80</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="telemetry-columns-grid">
+            <!-- Left Col: Batting & Bowling Stats -->
+            <div class="stats-col-left">
+              <!-- Batting Table -->
+              <div class="telemetry-table-card">
+                <div class="table-card-header">
+                  <span><i class="fa-solid fa-baseball-bat-ball text-green"></i> Batting - Mumbai Indians</span>
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </div>
+                <table class="telemetry-table">
+                  <thead>
+                    <tr>
+                      <th>Batter</th>
+                      <th>R</th>
+                      <th>B</th>
+                      <th>4s</th>
+                      <th>6s</th>
+                      <th>SR</th>
+                    </tr>
+                  </thead>
+                  <tbody id="battingStatsTbody">
+                    <tr class="active-batter">
+                      <td><span class="player-name">Hardik Pandya*</span></td>
+                      <td>38</td>
+                      <td>18</td>
+                      <td>3</td>
+                      <td>2</td>
+                      <td>211.11</td>
+                    </tr>
+                    <tr>
+                      <td><span class="player-name">Tilak Varma</span></td>
+                      <td>42</td>
+                      <td>29</td>
+                      <td>4</td>
+                      <td>1</td>
+                      <td>144.82</td>
+                    </tr>
+                    <tr>
+                      <td><span class="player-name">Rohit Sharma (c)</span></td>
+                      <td>54</td>
+                      <td>31</td>
+                      <td>6</td>
+                      <td>3</td>
+                      <td>174.19</td>
+                    </tr>
+                    <tr>
+                      <td><span class="player-name">Suryakumar Yadav</span></td>
+                      <td>28</td>
+                      <td>16</td>
+                      <td>2</td>
+                      <td>2</td>
+                      <td>175.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Bowling Table -->
+              <div class="telemetry-table-card">
+                <div class="table-card-header">
+                  <span><i class="fa-solid fa-baseball text-teal"></i> Bowling - Chennai Super Kings</span>
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </div>
+                <table class="telemetry-table">
+                  <thead>
+                    <tr>
+                      <th>Bowler</th>
+                      <th>O</th>
+                      <th>M</th>
+                      <th>R</th>
+                      <th>W</th>
+                      <th>ECON</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bowlingStatsTbody">
+                    <tr class="active-bowler">
+                      <td><span class="player-name">Matheesha Pathirana*</span></td>
+                      <td>3.2</td>
+                      <td>0</td>
+                      <td>31</td>
+                      <td>2</td>
+                      <td>9.30</td>
+                    </tr>
+                    <tr>
+                      <td><span class="player-name">Ravindra Jadeja</span></td>
+                      <td>4.0</td>
+                      <td>0</td>
+                      <td>32</td>
+                      <td>1</td>
+                      <td>8.00</td>
+                    </tr>
+                    <tr>
+                      <td><span class="player-name">Deepak Chahar</span></td>
+                      <td>4.0</td>
+                      <td>0</td>
+                      <td>44</td>
+                      <td>1</td>
+                      <td>11.00</td>
+                    </tr>
+                    <tr>
+                      <td><span class="player-name">Mustafizur Rahman</span></td>
+                      <td>4.0</td>
+                      <td>0</td>
+                      <td>38</td>
+                      <td>0</td>
+                      <td>9.50</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Right Col: Ball by Ball Stream -->
+            <div class="stats-col-right">
+              <div class="telemetry-table-card stream-card">
+                <div class="table-card-header">
+                  <span><i class="fa-solid fa-tower-broadcast text-yellow"></i> Ball-by-Ball Live Commentary</span>
+                  <span class="badge-live-pulse"><span class="pulse-indicator-sm"></span> SYNCED</span>
+                </div>
+                <div class="ball-commentary-feed" id="ballByBallFeed">
+                  <div class="commentary-entry">
+                    <div class="ov-num text-teal">18.2</div>
+                    <div class="ov-desc">
+                      <strong>Pathirana to Tilak Varma, 1 run</strong>
+                      <p>Full yorker angled on middle and off stump, squeezed towards long-on for a single.</p>
+                    </div>
+                  </div>
+                  <div class="commentary-entry">
+                    <div class="ov-num text-teal">18.1</div>
+                    <div class="ov-desc">
+                      <strong>Pathirana to Hardik Pandya, <span class="tag-boundary tag-six">SIX!</span></strong>
+                      <p>Stand and deliver! Power over long on! Length ball in the slot and hammered over the ropes.</p>
+                    </div>
+                  </div>
+                  <div class="commentary-entry">
+                    <div class="ov-num text-teal">17.6</div>
+                    <div class="ov-desc">
+                      <strong>Mustafizur to Tilak Varma, <span class="tag-boundary tag-four">FOUR!</span></strong>
+                      <p>Cracking stroke! Width outside off, drilled through extra cover with pure timing.</p>
+                    </div>
+                  </div>
+                  <div class="commentary-entry">
+                    <div class="ov-num text-red">17.5</div>
+                    <div class="ov-desc">
+                      <strong>Jadeja to Tim David, <span class="tag-boundary tag-wicket">OUT!</span></strong>
+                      <p>Tim David holes out to long off! Mistimed flat trajectory, caught smoothly by Gaikwad.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="commentary-footer">
+                  <button class="c4-btn c4-btn-dark-sm full-width" onclick="c4App.simulateNextBall()">
+                    <i class="fa-solid fa-rotate"></i> Simulate Next Ball (Demo)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== DYNAMIC MODULE VIEWPORTS (ACADEMIES / TURFS / SHOPS / TOURNAMENTS / NEWS) ==================== -->
+    
+    <!-- ACADEMIES DIRECTORY SECTION -->
+    <section class="section-directory" id="academiesSection" style="display: none;">
+      <div class="c4-container">
+        <div class="directory-head">
+          <div>
+            <span class="section-tag-gold">CERTIFIED CRICKET ACADEMIES</span>
+            <h2>Train With India's Top Cricket Mentors</h2>
+            <p>BCCI certified coaching setups, turf nets, video analysis, and age-group batch enrolments.</p>
+          </div>
+          <button class="c4-btn c4-btn-green" onclick="c4App.openBusinessRegModal('academy')">
+            <i class="fa-solid fa-plus"></i> Register Your Academy
+          </button>
+        </div>
+
+        <div class="directory-filter-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="academySearchInput" placeholder="Filter academies by name, coach or area..." onkeyup="c4App.filterAcademies()">
+          </div>
+          <select id="academyCityFilter" onchange="c4App.filterAcademies()">
+            <option value="All">All Cities</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi NCR">Delhi NCR</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Hyderabad">Hyderabad</option>
+          </select>
+          <select id="academyLevelFilter" onchange="c4App.filterAcademies()">
+            <option value="All">All Programs</option>
+            <option value="Grassroots">Grassroots (U-12)</option>
+            <option value="Pro Youth">Pro Youth (U-16 / U-19)</option>
+            <option value="Elite">Elite / Ranji Prep</option>
+          </select>
+        </div>
+
+        <div class="cards-listings-grid" id="academiesGrid">
+          <!-- Dynamically populated via app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TURFS & GROUNDS SECTION -->
+    <section class="section-directory" id="turfsSection" style="display: none;">
+      <div class="c4-container">
+        <div class="directory-head">
+          <div>
+            <span class="section-tag-gold">ASTRO TURFS & FLOODLIT GROUNDS</span>
+            <h2>Book High-Spec Sports Arenas</h2>
+            <p>Box cricket, full boundary turf wickets, football cages, badminton, and floodlit night matches.</p>
+          </div>
+          <button class="c4-btn c4-btn-green" onclick="c4App.openBusinessRegModal('turf')">
+            <i class="fa-solid fa-plus"></i> List Your Turf
+          </button>
+        </div>
+
+        <div class="directory-filter-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="turfSearchInput" placeholder="Search by turf name, area or sport..." onkeyup="c4App.filterTurfs()">
+          </div>
+          <select id="turfSportFilter" onchange="c4App.filterTurfs()">
+            <option value="All">All Sports</option>
+            <option value="Cricket">Cricket</option>
+            <option value="Football">Football</option>
+            <option value="Badminton">Badminton</option>
+            <option value="Tennis">Tennis</option>
+          </select>
+          <select id="turfCityFilter" onchange="c4App.filterTurfs()">
+            <option value="All">All Cities</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi NCR">Delhi NCR</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Pune">Pune</option>
+          </select>
+        </div>
+
+        <div class="cards-listings-grid" id="turfsGrid">
+          <!-- Dynamically populated via app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SPORTS SHOPS SECTION -->
+    <section class="section-directory" id="shopsSection" style="display: none;">
+      <div class="c4-container">
+        <div class="directory-head">
+          <div>
+            <span class="section-tag-gold">AUTHENTIC CRICKET GEAR STOCKISTS</span>
+            <h2>Top Sports Stores & Cricket Equipment</h2>
+            <p>Grade-1 English willow bats, customized team jerseys, batting leg-guards, helmets, and bat knocks.</p>
+          </div>
+          <button class="c4-btn c4-btn-green" onclick="c4App.openBusinessRegModal('shop')">
+            <i class="fa-solid fa-plus"></i> List Your Shop
+          </button>
+        </div>
+
+        <div class="directory-filter-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="shopSearchInput" placeholder="Search bat brands, gear or store..." onkeyup="c4App.filterShops()">
+          </div>
+          <select id="shopCategoryFilter" onchange="c4App.filterShops()">
+            <option value="All">All Categories</option>
+            <option value="Bats">English & Kashmir Willow</option>
+            <option value="Protective">Protective Gear & Helmets</option>
+            <option value="Apparel">Team Apparel & Shoes</option>
+            <option value="Accessories">Bat Knocking & Repair</option>
+          </select>
+          <select id="shopCityFilter" onchange="c4App.filterShops()">
+            <option value="All">All Cities</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi NCR">Delhi NCR</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Chennai">Chennai</option>
+          </select>
+        </div>
+
+        <div class="cards-listings-grid" id="shopsGrid">
+          <!-- Dynamically populated via app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TOURNAMENTS SECTION -->
+    <section class="section-directory" id="tournamentsSection" style="display: none;">
+      <div class="c4-container">
+        <div class="directory-head">
+          <div>
+            <span class="section-tag-gold">PAN-INDIA CRICKET LEAGUES</span>
+            <h2>Tournaments, Corporate Cups & Box Cricket</h2>
+            <p>Enter your team, view tournament rules, cash prize structures, and live bracket telemetry.</p>
+          </div>
+          <button class="c4-btn c4-btn-green" onclick="c4App.openBusinessRegModal('tournament')">
+            <i class="fa-solid fa-plus"></i> Register Tournament
+          </button>
+        </div>
+
+        <div class="directory-filter-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="tournamentSearchInput" placeholder="Search cups, leagues or format..." onkeyup="c4App.filterTournaments()">
+          </div>
+          <select id="tournamentFormatFilter" onchange="c4App.filterTournaments()">
+            <option value="All">All Formats</option>
+            <option value="T20">T20 Leather Ball</option>
+            <option value="Box Cricket">Box Cricket Tape Ball</option>
+            <option value="Corporate">Corporate Weekend Cup</option>
+            <option value="Open">State Open Championship</option>
+          </select>
+          <select id="tournamentStatusFilter" onchange="c4App.filterTournaments()">
+            <option value="All">All Statuses</option>
+            <option value="Open">Registrations Open</option>
+            <option value="Ongoing">Ongoing Matches</option>
+            <option value="Upcoming">Upcoming</option>
+          </select>
+        </div>
+
+        <div class="cards-listings-grid" id="tournamentsGrid">
+          <!-- Dynamically populated via app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWS SECTION -->
+    <section class="section-directory" id="newsSection" style="display: none;">
+      <div class="c4-container">
+        <div class="directory-head">
+          <div>
+            <span class="section-tag-gold">GLOBAL & DOMESTIC FEED</span>
+            <h2>Cricket News, Match Reports & Analysis</h2>
+            <p>Instant scoops from international bilateral tours, IPL auctions, grassroots trophies and player injury bulletins.</p>
+          </div>
+          <div class="badge-demo-tag">LIVE SYNDICATION FEED</div>
+        </div>
+
+        <div class="directory-filter-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="newsSearchInput" placeholder="Search news headlines, players or tournaments..." onkeyup="c4App.filterNews()">
+          </div>
+          <select id="newsCategoryFilter" onchange="c4App.filterNews()">
+            <option value="All">All Categories</option>
+            <option value="International">International</option>
+            <option value="IPL">IPL</option>
+            <option value="Domestic">Domestic & Grassroots</option>
+            <option value="Tactical">Tactical Breakdown</option>
+          </select>
+        </div>
+
+        <div class="news-main-grid" id="newsGrid">
+          <!-- Dynamically populated via app.js -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="c4-footer">
+    <div class="c4-container footer-top-grid">
+      <!-- Col 1: Brand & Bio -->
+      <div class="footer-col-brand">
+        <div class="brand-logo">
+          <img src="/images/c4cricket-logo.png" alt="C4CRICKET" style="height: 48px; width: auto; object-fit: contain; margin-bottom: 6px;">
+        </div>
+        <p class="brand-subtext">
+          The global ecosystem connecting grassroots cricketers, verified academies, high-spec turfs, equipment retailers, national tournament organizers with live broadcast telemetrics.
+        </p>
+        <div class="compliance-badges">
+          <span class="c-badge-teal">B2B VERIFIED</span>
+          <span class="c-badge-blue">ICC COMPLIANT API</span>
+        </div>
+      </div>
+
+      <!-- Col 2: Directory -->
+      <div class="footer-col-nav">
+        <h4>DIRECTORY</h4>
+        <ul>
+          <li><a href="#academies" onclick="c4App.navigate('academies')">Cricket Academies</a></li>
+          <li><a href="#turfs" onclick="c4App.navigate('turfs')">Indoor & Turf Pitches</a></li>
+          <li><a href="#shops" onclick="c4App.navigate('shops')">Equipment Retailers</a></li>
+          <li><a href="#shops" onclick="c4App.navigate('shops')">Bat Refurbishment & Repairs</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Ecosystem -->
+      <div class="footer-col-nav">
+        <h4>ECOSYSTEM</h4>
+        <ul>
+          <li><a href="#match-center" onclick="c4App.navigate('match-center')">Live Scoring Console</a></li>
+          <li><a href="#tournaments" onclick="c4App.navigate('tournaments')">Tournament Registry</a></li>
+          <li><a href="#pricing" onclick="c4App.navigate('pricing')">Business Subscription</a></li>
+          <li><a href="#business-register" onclick="c4App.openBusinessRegModal()">Claim Listing</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Platform & Legal -->
+      <div class="footer-col-nav">
+        <h4>PLATFORM & LEGAL</h4>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="c4App.showLegalModal('Privacy Policy')">Privacy Policy</a></li>
+          <li><a href="javascript:void(0)" onclick="c4App.showLegalModal('Terms of Service')">Terms of Service</a></li>
+          <li><a href="javascript:void(0)" onclick="c4App.showLegalModal('Merchant Agreement')">Merchant Agreement</a></li>
+          <li><a href="javascript:void(0)" onclick="c4App.showLegalModal('Developer Telemetry APIs')">Developer Telemetry APIs</a></li>
+        </ul>
+        <h4 style="margin-top: 16px; font-size: 0.82rem;">CONNECT WITH US</h4>
+        <div class="footer-social-links" style="display: flex; gap: 10px; margin-top: 8px;">
+          <a href="https://twitter.com" target="_blank" rel="noopener" class="social-icon-btn" title="Twitter / X"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" class="social-icon-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" class="social-icon-btn" title="YouTube Live Cricket"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://facebook.com" target="_blank" rel="noopener" class="social-icon-btn" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="c4-container footer-bottom-strip">
+      <div class="copyright-text">
+        © 2026 C4CRICKET Global Networks. Broadcast-grade telemetry systems reserved.
+      </div>
+      <div class="system-status-indicator">
+        <span class="latency-pill">LATENCY: 84ms</span>
+        <span class="nodes-pill"><span class="pulse-indicator-sm"></span> ALL NODES NOMINAL</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODALS CONTAINER ==================== -->
+  
+  <!-- 1. BUSINESS REGISTRATION MODAL -->
+  <div class="c4-modal-backdrop" id="businessRegModal">
+    <div class="c4-modal-content">
+      <div class="c4-modal-header">
+        <div class="m-title">
+          <i class="fa-solid fa-building-circle-check text-green"></i>
+          <div>
+            <h3>Register Your Cricket Business</h3>
+            <span class="sub">Get listed across Pan-India player networks in 2 minutes</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="c4App.closeModal('businessRegModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="businessRegForm" onsubmit="c4App.handleBusinessRegistration(event)">
+        <div class="c4-modal-body">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Business / Academy Name *</label>
+              <input type="text" name="businessName" placeholder="e.g. Apex Cricket Academy" required>
+            </div>
+            <div class="form-group">
+              <label>Business Category *</label>
+              <select name="businessType" id="regBusinessType" required>
+                <option value="academy">Cricket Academy</option>
+                <option value="turf">Turf / Sports Ground</option>
+                <option value="shop">Sports Shop & Equipment</option>
+                <option value="tournament">Tournament Organizer</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Contact Person *</label>
+              <input type="text" name="contactPerson" placeholder="Full name of owner/coach" required>
+            </div>
+            <div class="form-group">
+              <label>Phone / WhatsApp Number *</label>
+              <input type="tel" name="phone" placeholder="+91 98765 43210" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" name="email" placeholder="official@business.com" required>
+            </div>
+            <div class="form-group">
+              <label>Operating City *</label>
+              <select name="city" required>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi NCR">Delhi NCR</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Kolkata">Kolkata</option>
+                <option value="Ahmedabad">Ahmedabad</option>
+                <option value="Pune">Pune</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Full Address / Location Coordinates</label>
+            <input type="text" name="address" placeholder="Ground/Store Address, Landmark, Pin code" required>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Subscription Plan Selection *</label>
+              <select name="plan" required>
+                <option value="Standard Listing">Standard Listing (From ₹499/mo)</option>
+                <option value="Pro Listing">Pro Listing with Verified Badge (₹999/mo)</option>
+                <option value="Featured Spotlight">Featured Spotlight Listing (₹1,999/mo)</option>
+                <option value="Homepage Promotion">Homepage Promotion Bundle (₹4,999/mo)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Facilities / Key Features (Comma-separated)</label>
+              <input type="text" name="facilities" placeholder="e.g. Astro Turf, Floodlights, Bowling Machine">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Business Description & Coaching / Store Details</label>
+            <textarea name="description" rows="3" placeholder="Tell cricketers about your pitch specifications, batch timings, coaching staff credentials or inventory..."></textarea>
+          </div>
+
+          <div class="form-notice">
+            <i class="fa-solid fa-circle-info"></i> All submissions are instantly pushed to the <strong>C4Admin Approval Pipeline</strong> for verification.
+          </div>
+        </div>
+        <div class="c4-modal-footer">
+          <button type="button" class="c4-btn c4-btn-dark" onclick="c4App.closeModal('businessRegModal')">Cancel</button>
+          <button type="submit" class="c4-btn c4-btn-green" id="btnSubmitBusinessReg">
+            <i class="fa-solid fa-paper-plane"></i> Submit Registration
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. BOOKING MODAL (TURF / ACADEMY / TOURNAMENT) -->
+  <div class="c4-modal-backdrop" id="bookingModal">
+    <div class="c4-modal-content">
+      <div class="c4-modal-header">
+        <div class="m-title">
+          <i class="fa-solid fa-calendar-check text-yellow"></i>
+          <div>
+            <h3 id="bookingModalTitle">Book Slot</h3>
+            <span class="sub" id="bookingModalSubtitle">Fast online reservation with zero platform fees</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="c4App.closeModal('bookingModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="bookingActionForm" onsubmit="c4App.handleSlotBooking(event)">
+        <input type="hidden" name="itemId" id="bookingItemId">
+        <input type="hidden" name="itemType" id="bookingItemType">
+        <div class="c4-modal-body">
+          <div class="booking-summary-pill" id="bookingSummaryPill">
+            <!-- Details rendered dynamically -->
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Your Full Name *</label>
+              <input type="text" name="userName" id="bookingUserName" placeholder="Full name" required>
+            </div>
+            <div class="form-group">
+              <label>Mobile Number *</label>
+              <input type="tel" name="userPhone" placeholder="+91 98765 43210" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Select Date *</label>
+              <input type="date" name="bookDate" id="bookingDateInput" required>
+            </div>
+            <div class="form-group">
+              <label>Preferred Time Slot *</label>
+              <select name="bookSlot" id="bookingSlotSelect" required>
+                <option value="06:00 AM - 08:00 AM">06:00 AM - 08:00 AM (Early Bird)</option>
+                <option value="08:00 AM - 10:00 AM">08:00 AM - 10:00 AM (Morning Batch)</option>
+                <option value="04:00 PM - 06:00 PM">04:00 PM - 06:00 PM (Evening Slot)</option>
+                <option value="06:00 PM - 08:00 PM">06:00 PM - 08:00 PM (Floodlit Prime)</option>
+                <option value="08:00 PM - 10:00 PM">08:00 PM - 10:00 PM (Night Rush)</option>
+                <option value="10:00 PM - 12:00 AM">10:00 PM - 12:00 AM (Late Box)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Special Instructions / Team Details</label>
+            <textarea name="notes" rows="2" placeholder="e.g. Need 2 cricket bats + leather match ball included, 14 players attending."></textarea>
+          </div>
+        </div>
+        <div class="c4-modal-footer">
+          <button type="button" class="c4-btn c4-btn-dark" onclick="c4App.closeModal('bookingModal')">Cancel</button>
+          <button type="submit" class="c4-btn c4-btn-green">
+            <i class="fa-solid fa-check"></i> Confirm Reservation
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. DETAIL VIEW MODAL (FOR ACADEMY, TURF, SHOP, TOURNAMENT, NEWS) -->
+  <div class="c4-modal-backdrop" id="detailModal">
+    <div class="c4-modal-content modal-lg">
+      <div class="c4-modal-header">
+        <div class="m-title" id="detailModalHeader">
+          <!-- Dynamic -->
+        </div>
+        <button class="modal-close-btn" onclick="c4App.closeModal('detailModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="c4-modal-body" id="detailModalBody">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="c4-modal-footer" id="detailModalFooter">
+        <!-- Buttons injected -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. USER AUTH & PROFILE MODAL -->
+  <div class="c4-modal-backdrop" id="authModal">
+    <div class="c4-modal-content">
+      <div class="c4-modal-header">
+        <div class="m-title">
+          <i class="fa-solid fa-user-circle text-teal"></i>
+          <div>
+            <h3 id="authModalTitle">Player & Member Sign In</h3>
+            <span class="sub">Access your tournament matches, favourite venues & bookings</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="c4App.closeModal('authModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="auth-tabs-row">
+        <button class="auth-tab active" id="tabLoginBtn" onclick="c4App.toggleAuthTab('login')">Sign In</button>
+        <button class="auth-tab" id="tabRegisterBtn" onclick="c4App.toggleAuthTab('register')">Register Player Account</button>
+      </div>
+      
+      <!-- Login View -->
+      <form id="loginForm" onsubmit="c4App.handleUserLogin(event)">
+        <div class="c4-modal-body">
+          <div class="form-group">
+            <label>Email or Mobile Number</label>
+            <input type="text" id="loginEmail" placeholder="e.g. cricketer@c4cricket.com" required value="cricketer@c4cricket.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required value="cricket123">
+          </div>
+          <div class="demo-auth-hint">
+            <strong>Quick Test Credentials:</strong> User: <code>cricketer@c4cricket.com</code> / Pass: <code>cricket123</code>
+          </div>
+        </div>
+        <div class="c4-modal-footer">
+          <button type="submit" class="c4-btn c4-btn-green full-width">Sign In to C4CRICKET</button>
+        </div>
+      </form>
+
+      <!-- Register View -->
+      <form id="registerForm" style="display:none;" onsubmit="c4App.handleUserRegister(event)">
+        <div class="c4-modal-body">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="Virat Sharma" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="virat@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="tel" name="phone" placeholder="+91 98765 43210" required>
+          </div>
+          <div class="form-group">
+            <label>Player Role</label>
+            <select name="role">
+              <option value="Top-order Batter">Top-order Batter</option>
+              <option value="Pace Bowler">Pace Bowler</option>
+              <option value="Spin Bowler">Spin Bowler</option>
+              <option value="All-Rounder">All-Rounder</option>
+              <option value="Wicket-keeper">Wicket-keeper Batter</option>
+              <option value="Team Captain / Manager">Team Captain / Manager</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Create Password</label>
+            <input type="password" name="password" placeholder="••••••••" required>
+          </div>
+        </div>
+        <div class="c4-modal-footer">
+          <button type="submit" class="c4-btn c4-btn-green full-width">Create Player Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="c4ToastContainer" class="c4-toast-container"></div>
+
+  <!-- MAIN SCRIPT -->
+  <script src="app.js"></script>
+</body>
+</html>

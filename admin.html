@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C4Admin – Pan-India Cricket Management Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="c4-admin-body">
+
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="brand-link">
+          <img src="/images/c4cricket-logo.png" alt="C4CRICKET Admin" style="height: 40px; width: auto; object-fit: contain; margin-bottom: 6px;">
+          <span class="admin-role-badge">SUPERUSER CONSOLE</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">CORE PLATFORM</div>
+        <button class="nav-item active" onclick="adminApp.switchTab('overview')">
+          <i class="fa-solid fa-gauge-high"></i> Dashboard Overview
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('approvals')">
+          <i class="fa-solid fa-building-circle-check"></i> Business Approvals
+          <span class="pending-count" id="pendingApprovalsBadge">0</span>
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('users')">
+          <i class="fa-solid fa-users"></i> User Management
+        </button>
+
+        <div class="nav-section-title">DIRECTORY REGISTRY</div>
+        <button class="nav-item" onclick="adminApp.switchTab('academies')">
+          <i class="fa-solid fa-graduation-cap"></i> Manage Academies
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('turfs')">
+          <i class="fa-solid fa-table-tennis-paddle-ball"></i> Manage Turfs
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('shops')">
+          <i class="fa-solid fa-store"></i> Manage Sports Shops
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('tournaments')">
+          <i class="fa-solid fa-trophy"></i> Tournament Management
+        </button>
+
+        <div class="nav-section-title">COMMERCE & CONTENT</div>
+        <button class="nav-item" onclick="adminApp.switchTab('bookings')">
+          <i class="fa-solid fa-calendar-check"></i> Customer Bookings
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('news')">
+          <i class="fa-solid fa-newspaper"></i> News Management
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('subscriptions')">
+          <i class="fa-solid fa-indian-rupee-sign"></i> Subscriptions
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('reports')">
+          <i class="fa-solid fa-chart-pie"></i> Reports & Analytics
+        </button>
+        <button class="nav-item" onclick="adminApp.switchTab('settings')">
+          <i class="fa-solid fa-gears"></i> Platform Settings
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="index.html" class="c4-btn c4-btn-outline-sm full-width">
+          <i class="fa-solid fa-arrow-left"></i> Back to Main Portal
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN ADMIN CONTENT -->
+    <main class="admin-main">
+      <!-- TOP NAV -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" onclick="adminApp.toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-title-wrap">
+            <h2 id="adminPageTitle">Dashboard Overview</h2>
+            <span class="sub" id="adminPageSub">Real-time status of C4CRICKET entities, bookings and subscriptions.</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="admin-telemetry-badge">
+            <span class="pulse-indicator"></span> BROADCAST LIVE
+          </div>
+          <button class="c4-btn c4-btn-yellow-sm" onclick="adminApp.exportData()">
+            <i class="fa-solid fa-file-export"></i> Export JSON Data
+          </button>
+          <div class="admin-profile-pill">
+            <div class="adm-avatar">SA</div>
+            <div>
+              <span class="adm-name">Super Admin</span>
+              <span class="adm-role">Platform Operator</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- VIEW CONTAINER -->
+      <div class="admin-view-content" id="adminViewContainer">
+
+        <!-- ================= TAB 1: OVERVIEW ================= -->
+        <div class="admin-tab-pane active" id="pane-overview">
+          <!-- 8 Statistics Cards -->
+          <div class="admin-stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon-wrap bg-green-tint"><i class="fa-solid fa-users"></i></div>
+              <div class="stat-info">
+                <span class="stat-lbl">Total Users</span>
+                <h3 class="stat-num" id="statTotalUsers">1,480</h3>
+                <span class="stat-change text-green"><i class="fa-solid fa-arrow-trend-up"></i> +14% this month</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrap bg-gold-tint"><i class="fa-solid fa-briefcase"></i></div>
+              <div class="stat-info">
+                <span class="stat-lbl">Total Businesses</span>
+                <h3 class="stat-num" id="statTotalBusinesses">86</h3>
+                <span class="stat-change text-green"><i class="fa-solid fa-arrow-trend-up"></i> Pan-India verified</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrap bg-teal-tint"><i class="fa-solid fa-graduation-cap"></i></div>
+              <div class="stat-info">
+                <span class="stat-lbl">Total Academies</span>
+                <h3 class="stat-num" id="statTotalAcademies">3</h3>
+                <span class="stat-change">BCCI Coaches</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrap bg-blue-tint"><i class="fa-solid fa-table-tennis-paddle-ball"></i></div>
+              <div class="stat-info">
+                <span class="stat-lbl">Total Turfs</span>
+                <h3 class="stat-num" id="statTotalTurfs">3</h3>
+                <span class="stat-change">Floodlit grounds</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrap bg-amber-tint"><i class="fa-solid fa-store"></i></div>
+              <div class="stat-info">
+                <span class="stat-lbl">Sports Shops</span>
+                <h3 class="stat-num" id="statTotalShops">3</h3>
+                <span class="stat-change">Authentic stockists</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrap bg-gold-tint"><i class="fa-solid fa-trophy"></i></div>
+              <div class="stat-info">
+                <span class="stat-lbl">Tournaments</span>
+                <h3 class="stat-num" id="statTotalTournaments">3</h3>
+                <span class="stat-change text-green">₹8.25L Prize pools</span>
+              </div>
+            </div>
+
+            <div class="stat-card highlight-pending">
+              <div class="stat-icon-wrap bg-red-tint"><i class="fa-solid fa-clock"></i></div>
+              <div class="stat-info">
+                <span class="stat-lbl">Pending Approvals</span>
+                <h3 class="stat-num text-red" id="statPendingApprovals">1</h3>
+                <span class="stat-change text-red">Action required</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrap bg-green-tint"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+              <div class="stat-info">
+                <span class="stat-lbl">Active Subscriptions</span>
+                <h3 class="stat-num" id="statActiveSubs">42</h3>
+                <span class="stat-change text-green">₹1,48,200 MRR</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending Approvals Quick Table & Recent Bookings -->
+          <div class="admin-dual-grid">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h4><i class="fa-solid fa-building-circle-check text-yellow"></i> Latest Business Registrations</h4>
+                <button class="c4-btn c4-btn-outline-sm" onclick="adminApp.switchTab('approvals')">View All</button>
+              </div>
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Business</th>
+                      <th>Type</th>
+                      <th>City</th>
+                      <th>Plan</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overviewPendingTbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h4><i class="fa-solid fa-calendar-check text-teal"></i> Recent Player Bookings</h4>
+                <button class="c4-btn c4-btn-outline-sm" onclick="adminApp.switchTab('bookings')">View All</button>
+              </div>
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Player</th>
+                      <th>Venue / Event</th>
+                      <th>Date / Slot</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overviewBookingsTbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 2: APPROVALS ================= -->
+        <div class="admin-tab-pane" id="pane-approvals">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h4>Business Verification Pipeline</h4>
+                <span class="sub">Review submitted registrations and grant merchant verified credentials.</span>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Business Name</th>
+                    <th>Category</th>
+                    <th>Contact</th>
+                    <th>City / Address</th>
+                    <th>Plan</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th>Verification Action</th>
+                  </tr>
+                </thead>
+                <tbody id="allApprovalsTbody">
+                  <!-- Dynamic -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 3: MANAGE ACADEMIES ================= -->
+        <div class="admin-tab-pane" id="pane-academies">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h4>Manage Cricket Academies</h4>
+                <span class="sub">Add, modify or delete coaching centers and coaching staff.</span>
+              </div>
+              <button class="c4-btn c4-btn-green" onclick="adminApp.openAddModal('academy')">
+                <i class="fa-solid fa-plus"></i> Add New Academy
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Academy Name</th>
+                    <th>Head Coach</th>
+                    <th>City</th>
+                    <th>Level</th>
+                    <th>Price/Mo</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="academiesAdminTbody">
+                  <!-- Dynamic -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 4: MANAGE TURFS ================= -->
+        <div class="admin-tab-pane" id="pane-turfs">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h4>Manage Turfs & Grounds</h4>
+                <span class="sub">Manage floodlit venues, hourly slots and multi-sport configurations.</span>
+              </div>
+              <button class="c4-btn c4-btn-green" onclick="adminApp.openAddModal('turf')">
+                <i class="fa-solid fa-plus"></i> Add New Turf
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Turf Name</th>
+                    <th>Sports</th>
+                    <th>City</th>
+                    <th>Hourly Rate</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="turfsAdminTbody">
+                  <!-- Dynamic -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 5: MANAGE SHOPS ================= -->
+        <div class="admin-tab-pane" id="pane-shops">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h4>Manage Sports Shops</h4>
+                <span class="sub">Manage verified cricket bat and sports gear stockists.</span>
+              </div>
+              <button class="c4-btn c4-btn-green" onclick="adminApp.openAddModal('shop')">
+                <i class="fa-solid fa-plus"></i> Add New Shop
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Store Name</th>
+                    <th>Specialty</th>
+                    <th>City</th>
+                    <th>Discount Promo</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="shopsAdminTbody">
+                  <!-- Dynamic -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 6: MANAGE TOURNAMENTS ================= -->
+        <div class="admin-tab-pane" id="pane-tournaments">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h4>Manage Cricket Tournaments</h4>
+                <span class="sub">Configure leagues, prize purses, team caps and registrations.</span>
+              </div>
+              <button class="c4-btn c4-btn-green" onclick="adminApp.openAddModal('tournament')">
+                <i class="fa-solid fa-plus"></i> Add Tournament
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Tournament</th>
+                    <th>Format</th>
+                    <th>Dates / City</th>
+                    <th>Cash Prize</th>
+                    <th>Entry Fee</th>
+                    <th>Teams</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tournamentsAdminTbody">
+                  <!-- Dynamic -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 7: BOOKINGS ================= -->
+        <div class="admin-tab-pane" id="pane-bookings">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h4>Customer Slot & Batch Bookings</h4>
+                <span class="sub">Reservations dispatched by players for turfs, academies, and tournaments.</span>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Player Name</th>
+                    <th>Phone</th>
+                    <th>Target Event/Venue</th>
+                    <th>Reservation Date</th>
+                    <th>Slot</th>
+                    <th>Created At</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="allBookingsTbody">
+                  <!-- Dynamic -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 8: NEWS ================= -->
+        <div class="admin-tab-pane" id="pane-news">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h4>Manage Cricket News & Match Reports</h4>
+                <span class="sub">Publish tactical match breakdowns, biomechanics studies & domestic updates.</span>
+              </div>
+              <button class="c4-btn c4-btn-green" onclick="adminApp.openAddModal('news')">
+                <i class="fa-solid fa-plus"></i> Add Article
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Article Title</th>
+                    <th>Category</th>
+                    <th>Time Tag</th>
+                    <th>Read Time</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="newsAdminTbody">
+                  <!-- Dynamic -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 9: USERS ================= -->
+        <div class="admin-tab-pane" id="pane-users">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h4>Registered Players & Managers</h4>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Registration Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Virat Sharma</strong></td>
+                    <td>cricketer@c4cricket.com</td>
+                    <td><span class="badge-role">Top-order Batter</span></td>
+                    <td>2026-10-31</td>
+                    <td><span class="badge-status-active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Rohit Verma</strong></td>
+                    <td>rohit.coach@bcci.in</td>
+                    <td><span class="badge-role">BCCI Certified Coach</span></td>
+                    <td>2026-10-28</td>
+                    <td><span class="badge-status-active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sandeep Varma</strong></td>
+                    <td>skylinearena@yahoo.com</td>
+                    <td><span class="badge-role">Turf Merchant</span></td>
+                    <td>2026-10-25</td>
+                    <td><span class="badge-status-active">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 10: SUBSCRIPTIONS & MONETIZATION ================= -->
+        <div class="admin-tab-pane" id="pane-subscriptions">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h4>Merchant Subscriptions & Monetization Plans</h4>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Merchant / Business</th>
+                    <th>Plan Tier</th>
+                    <th>Price</th>
+                    <th>Billing Frequency</th>
+                    <th>Renewal Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Skyline Astro Arena</td>
+                    <td>Featured Spotlight</td>
+                    <td>₹1,999</td>
+                    <td>Monthly Auto-Debit</td>
+                    <td>2026-11-30</td>
+                    <td><span class="badge-status-active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td>Master Blaster Cricket Emporium</td>
+                    <td>Pro Merchant Listing</td>
+                    <td>₹1,499</td>
+                    <td>Monthly Auto-Debit</td>
+                    <td>2026-11-25</td>
+                    <td><span class="badge-status-active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td>Mumbai Cricket Club of Excellence</td>
+                    <td>Standard Academy Tier</td>
+                    <td>₹999</td>
+                    <td>Monthly Auto-Debit</td>
+                    <td>2026-11-18</td>
+                    <td><span class="badge-status-active">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 11: REPORTS ================= -->
+        <div class="admin-tab-pane" id="pane-reports">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h4>Telemetry & Traffic Analytics</h4>
+            </div>
+            <div style="padding: 24px; color: var(--c4-text-sub); line-height: 1.6;">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+                <div style="background: #16222c; padding: 18px; border-radius: 8px;">
+                  <span style="font-size: 0.8rem; color: var(--c4-text-muted);">MONTHLY LIVE TELEMETRY SESSIONS</span>
+                  <h3 style="color: #fff; font-size: 1.8rem; margin-top: 6px;">248,910</h3>
+                  <span style="color: #2ed573; font-size: 0.8rem;">+24.8% vs last month</span>
+                </div>
+                <div style="background: #16222c; padding: 18px; border-radius: 8px;">
+                  <span style="font-size: 0.8rem; color: var(--c4-text-muted);">SLOT RESERVATION VALUE</span>
+                  <h3 style="color: var(--c4-yellow); font-size: 1.8rem; margin-top: 6px;">₹18,45,200</h3>
+                  <span style="color: #2ed573; font-size: 0.8rem;">0% Commission Retained by Venues</span>
+                </div>
+                <div style="background: #16222c; padding: 18px; border-radius: 8px;">
+                  <span style="font-size: 0.8rem; color: var(--c4-text-muted);">MERCHANT RETENTION RATE</span>
+                  <h3 style="color: var(--c4-teal); font-size: 1.8rem; margin-top: 6px;">96.4%</h3>
+                  <span style="color: #2ed573; font-size: 0.8rem;">High venue satisfaction</span>
+                </div>
+              </div>
+              <p>All metrics comply with broadcast telemetry data specifications. Export full analytics logs via the top right export button.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 12: SETTINGS ================= -->
+        <div class="admin-tab-pane" id="pane-settings">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h4>Global Platform Settings</h4>
+            </div>
+            <div style="padding: 20px;">
+              <form onsubmit="event.preventDefault(); adminApp.showToast('Platform settings saved successfully!', 'success');">
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>Platform Name</label>
+                    <input type="text" value="C4CRICKET" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Broadcast Engine Mode</label>
+                    <select>
+                      <option selected>High-Precision Ball Telemetry (Active)</option>
+                      <option>Low-Bandwidth Mode</option>
+                      <option>Maintenance Mode</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label>Default Currency</label>
+                    <input type="text" value="INR (₹)" required>
+                  </div>
+                  <div class="form-group">
+                    <label>BCCI Coach Verification Key</label>
+                    <input type="password" value="bcci-live-telemetry-2026-auth" required>
+                  </div>
+                </div>
+                <button type="submit" class="c4-btn c4-btn-green" style="margin-top: 14px;">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Global Configurations
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ADMIN ADD/EDIT MODAL -->
+  <div class="c4-modal-backdrop" id="adminCrudModal">
+    <div class="c4-modal-content">
+      <div class="c4-modal-header">
+        <div class="m-title">
+          <i class="fa-solid fa-pen-to-square text-yellow"></i>
+          <div>
+            <h3 id="adminModalTitle">Add Record</h3>
+            <span class="sub" id="adminModalSub">Enter record details</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="adminApp.closeCrudModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="adminCrudForm" onsubmit="adminApp.handleCrudSubmit(event)">
+        <input type="hidden" id="crudItemType">
+        <input type="hidden" id="crudItemId">
+        <div class="c4-modal-body" id="adminCrudFormFields">
+          <!-- Dynamic Form Fields -->
+        </div>
+        <div class="c4-modal-footer">
+          <button type="button" class="c4-btn c4-btn-dark" onclick="adminApp.closeCrudModal()">Cancel</button>
+          <button type="submit" class="c4-btn c4-btn-green" id="btnCrudSave">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="adminToastContainer" class="c4-toast-container"></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
