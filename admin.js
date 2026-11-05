@@ -196,8 +196,15 @@ class AdminApp {
     tbody.innerHTML = data.registrations.map(reg => `
       <tr>
         <td>
-          <strong>${reg.businessName}</strong>
-          ${reg.description ? `<p style="font-size:0.7rem; color:var(--c4-text-muted); margin-top:2px;">${reg.description.substring(0, 50)}...</p>` : ''}
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:40px; height:40px; border-radius:6px; overflow:hidden; border:1px solid var(--adm-border); background:#0c131a; flex-shrink:0;">
+              <img src="${reg.image || '/images/card_academies_hd.png'}" alt="${reg.businessName}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/images/c4cricket-logo.png'">
+            </div>
+            <div>
+              <strong>${reg.businessName}</strong>
+              ${reg.description ? `<p style="font-size:0.7rem; color:var(--c4-text-muted); margin-top:2px;">${reg.description.substring(0, 45)}...</p>` : ''}
+            </div>
+          </div>
         </td>
         <td><span class="badge-role">${reg.businessType.toUpperCase()}</span></td>
         <td>${reg.contactPerson}<br><span style="font-size:0.7rem; color:var(--c4-text-muted);">${reg.phone}</span></td>
@@ -386,7 +393,9 @@ class AdminApp {
 
     reg.status = 'Approved';
 
-    // If it's an academy or turf, automatically publish into public directory!
+    // If it's an academy, turf, shop or tournament, automatically publish into public directory with uploaded image!
+    const uploadedImg = reg.image && reg.image.trim() ? reg.image : '';
+
     if (reg.businessType === 'academy') {
       data.academies.push({
         id: 'acad-' + Date.now(),
@@ -399,7 +408,7 @@ class AdminApp {
         reviews: 1,
         priceMonthly: 2999,
         facilities: reg.facilities && reg.facilities.length ? reg.facilities : ['Turf Pitch', 'Floodlights', 'Coaching Batches'],
-        image: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&auto=format&fit=crop&q=80',
+        image: uploadedImg || '/images/card_academies_hd.png',
         description: reg.description || 'Newly registered cricket academy verified on C4CRICKET network.',
         phone: reg.phone,
         verified: true
@@ -415,7 +424,7 @@ class AdminApp {
         rating: 5.0,
         reviews: 1,
         facilities: reg.facilities && reg.facilities.length ? reg.facilities : ['Astro Turf', 'Floodlights', 'Stumps & Bats'],
-        image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=600&auto=format&fit=crop&q=80',
+        image: uploadedImg || '/images/card_turfs_hd.png',
         description: reg.description || 'New astro cricket turf open for bookings.',
         phone: reg.phone,
         verified: true
@@ -431,9 +440,23 @@ class AdminApp {
         reviews: 1,
         specialty: 'Season Bats, English Willow & Cricket Gear',
         discount: '15% C4CRICKET Welcome Discount',
-        image: 'https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=600&auto=format&fit=crop&q=80',
+        image: uploadedImg || '/images/card_shops_hd.png',
         phone: reg.phone,
         verified: true
+      });
+    } else if (reg.businessType === 'tournament') {
+      data.tournaments.push({
+        id: 'tourn-' + Date.now(),
+        name: reg.businessName,
+        format: 'T20',
+        city: reg.city,
+        prize: '₹1,00,000 Cash',
+        entryFee: 4999,
+        dates: 'Upcoming Season',
+        teams: 16,
+        venue: reg.address || `${reg.city} Stadium`,
+        image: uploadedImg || '/uploads/tournament_trophy.png',
+        status: 'Open for Registration'
       });
     }
 

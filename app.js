@@ -1097,6 +1097,58 @@ class C4App {
     this.openModal('businessRegModal');
   }
 
+  async handleBusinessImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.showToast('Please select an image file (PNG, JPG, WebP)', 'warning');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const dataUrl = e.target.result;
+      const input = document.getElementById('regBusinessImageInput');
+      
+      // Attempt server upload for permanent clean path
+      try {
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: dataUrl })
+        });
+        if (uploadRes.ok) {
+          const resJson = await uploadRes.json();
+          if (resJson && resJson.url) {
+            if (input) input.value = resJson.url;
+            this.previewBusinessImage(resJson.url);
+            this.showToast('Business photo uploaded successfully!', 'success');
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback to data URL:', err);
+      }
+
+      if (input) input.value = dataUrl;
+      this.previewBusinessImage(dataUrl);
+      this.showToast('Image attached and ready to submit!', 'success');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  previewBusinessImage(url) {
+    const preview = document.getElementById('regBusinessImagePreview');
+    if (preview) {
+      if (url && url.trim()) {
+        preview.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/images/c4cricket-logo.png'">`;
+      } else {
+        preview.innerHTML = `<i class="fa-solid fa-image" style="color:var(--c4-text-muted);"></i>`;
+      }
+    }
+  }
+
   async handleBusinessRegistration(event) {
     event.preventDefault();
     const form = event.target;
@@ -1105,6 +1157,7 @@ class C4App {
     submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting to C4Admin...`;
 
     const formData = new FormData(form);
+    const uploadedImg = formData.get('image') || '';
     const payload = {
       businessName: formData.get('businessName'),
       businessType: formData.get('businessType'),
@@ -1115,7 +1168,8 @@ class C4App {
       address: formData.get('address'),
       plan: formData.get('plan'),
       facilities: formData.get('facilities') ? formData.get('facilities').split(',').map(s => s.trim()) : [],
-      description: formData.get('description')
+      description: formData.get('description'),
+      image: uploadedImg
     };
 
     try {

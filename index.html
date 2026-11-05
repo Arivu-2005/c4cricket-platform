@@ -98,7 +98,6 @@
           <a href="#shops" onclick="c4App.navigate('shops')">Sports Shops</a>
           <a href="#tournaments" onclick="c4App.navigate('tournaments')">Tournaments</a>
           <a href="#pricing" onclick="c4App.navigate('pricing')">Pricing & Plans</a>
-          <a href="admin.html">Admin Portal</a>
         </div>
         <div class="ticker-scores-stream" id="tickerScoresStream">
           <div class="ticker-item"><span class="badge-red">LIVE</span> IND vs ENG: 246/4 (41.2 ov)</div>
@@ -1163,6 +1162,25 @@
           <div class="form-group">
             <label>Business Description & Coaching / Store Details</label>
             <textarea name="description" rows="3" placeholder="Tell cricketers about your pitch specifications, batch timings, coaching staff credentials or inventory..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Business / Academy / Turf Photo (Upload Image)</label>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <label class="c4-btn c4-btn-outline-sm" style="cursor:pointer; margin-bottom:0;">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload From Device
+                  <input type="file" id="regBusinessImageUpload" accept="image/*" style="display:none;" onchange="c4App.handleBusinessImageUpload(event)">
+                </label>
+                <span style="font-size:0.75rem; color:var(--c4-text-muted);">or paste photo URL below</span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <input type="text" name="image" id="regBusinessImageInput" placeholder="Image URL or uploaded file data" style="flex:1;" oninput="c4App.previewBusinessImage(this.value)">
+                <div id="regBusinessImagePreview" style="width:48px; height:48px; border-radius:6px; border:1px solid #233544; background:#0b1116; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <i class="fa-solid fa-image" style="color:var(--c4-text-muted);"></i>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="form-notice">
