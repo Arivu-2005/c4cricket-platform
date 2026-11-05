@@ -2242,6 +2242,39 @@ input, select, textarea {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 0.75rem;
   color: var(--c4-text-muted);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-admin-login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  background: #111923;
+  color: #ffffff;
+  border: 1px solid #2a3b4c;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.footer-admin-login-btn:hover {
+  background: #192635;
+  border-color: #3e566e;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+.footer-admin-login-btn i {
+  color: #ffffff;
+  font-size: 0.78rem;
 }
 
 .system-status-indicator {
