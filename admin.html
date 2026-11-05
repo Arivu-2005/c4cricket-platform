@@ -15,11 +15,14 @@
   <div class="admin-layout">
     <!-- SIDEBAR -->
     <aside class="admin-sidebar" id="adminSidebar">
-      <div class="sidebar-header">
+      <div class="sidebar-header" style="display: flex; align-items: center; justify-content: space-between;">
         <a href="index.html" class="brand-link">
           <img src="/images/c4cricket-logo.png" alt="C4CRICKET Admin" style="height: 40px; width: auto; object-fit: contain; margin-bottom: 6px;">
           <span class="admin-role-badge">SUPERUSER CONSOLE</span>
         </a>
+        <button class="sidebar-close-mobile-btn" onclick="adminApp.toggleSidebar()" title="Close Menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
       <nav class="sidebar-nav">
@@ -73,6 +76,9 @@
         </a>
       </div>
     </aside>
+
+    <!-- SIDEBAR OVERLAY FOR MOBILE -->
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay" onclick="adminApp.toggleSidebar()"></div>
 
     <!-- MAIN ADMIN CONTENT -->
     <main class="admin-main">

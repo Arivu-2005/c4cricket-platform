@@ -106,12 +106,22 @@ class AdminApp {
       document.getElementById('adminPageSub').innerText = titles[tabId].sub;
     }
 
+    // Auto-close sidebar on mobile after navigating
+    if (window.innerWidth <= 992) {
+      const sidebar = document.getElementById('adminSidebar');
+      const overlay = document.getElementById('adminSidebarOverlay');
+      if (sidebar) sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('active');
+    }
+
     this.renderActiveTab();
   }
 
   toggleSidebar() {
     const sidebar = document.getElementById('adminSidebar');
-    sidebar.classList.toggle('open');
+    const overlay = document.getElementById('adminSidebarOverlay');
+    if (sidebar) sidebar.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('active');
   }
 
   updateStats() {
